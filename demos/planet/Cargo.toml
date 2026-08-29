@@ -1,0 +1,16 @@
+[package]
+name = "planet"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+artisan = { path = "../.." }
+wasm-bindgen = "0.2.117"
+rayon = "1.10.0"
+js-sys = "0.3.94"
+noise = "0.9.0"
+serde = { version = "1.0", features = ["derive"] }
+glam = { version = "0.32.1", features = ["serde"] }

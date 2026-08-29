@@ -1,0 +1,16 @@
+/target/
+**/target/
+**/*.rs.bk
+**/pkg/
+**/pkg-node/
+**/build/
+**/cmake-build-*/
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.npm/
+.yarn/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

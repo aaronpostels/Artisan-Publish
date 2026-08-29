@@ -1,0 +1,24 @@
+{
+  "name": "artisan-engine",
+  "version": "0.1.0",
+  "description": "High-performance web-first ECS engine",
+  "scripts": {
+    "build:wasm": "wasm-pack build --target web --release && wasm-pack build demos/vivarium_civ --target web --release && wasm-pack build demos/murmuration --target web --release && wasm-pack build demos/bouncing_rects --target web --release && wasm-pack build demos/scheduler --target web --release && wasm-pack build demos/metamorphosis --target web --release && wasm-pack build demos/planet --target web --release",
+    "dev": "node tools/scripts/dev_server.js",
+    "demo": "node tools/scripts/demo.js",
+    "vivarium": "node tools/scripts/demo.js vivarium_civ",
+    "murmuration": "node tools/scripts/demo.js murmuration",
+    "rects": "node tools/scripts/demo.js bouncing_rects",
+    "scheduler": "node tools/scripts/demo.js scheduler",
+    "metamorphosis": "node tools/scripts/demo.js metamorphosis",
+    "planet": "node tools/scripts/demo.js planet",
+    "bench:all": "node tools/scripts/run_all_benches.js",
+    "bench:all:quick": "node tools/scripts/run_all_benches.js --quick",
+    "bench:fair": "cargo run --release --bin bench_fair",
+    "bench:verify": "node tools/scripts/verify_fair.js",
+    "bench:ecs": "cargo run --release --bin bench_ecs -- --reps 15 --warmup 3 --out results/artisan_ecs_parallel.json",
+    "bench:ecs:serial": "cargo run --release --bin bench_ecs -- --serial --reps 15 --warmup 3 --out results/artisan_ecs_serial.json",
+    "bench:compare": "node tools/scripts/compare_results.js results/artisan_ecs_parallel.json results/bevy_ecs_parallel.json",
+    "verify:render-cache": "cargo run --release --bin verify_render_cache"
+  }
+}
