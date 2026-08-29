@@ -1411,7 +1411,7 @@ pub fn wasm_admin_set_food_regen(engine: &mut WasmEngine, multiplier: f32) {
     let Some(planet) = find_planet_entity(world) else {
         return;
     };
-    let scale = 8.0 * multiplier.clamp(0.0, 4.0);
+    let scale = 0.8 * multiplier.clamp(0.0, 4.0);
     if let Some(tuning) = world.get_component_mut::<SimTuning>(planet) {
         tuning.food_regen_scale = scale;
     }

@@ -299,7 +299,7 @@ impl Default for SimTuning {
             wander_cost_mult: 0.12,
 
             food_cap_scale: 480.0,
-            food_regen_scale: 8.0,
+            food_regen_scale: 0.8,
             food_eat_rate: 12.0,
 
             maturity_age: 120.0,

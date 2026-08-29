@@ -425,7 +425,7 @@ async function start() {
   const touchDefaultCount = matchMedia("(pointer: coarse)").matches ? "25000" : "250000";
   let count = parseInt(params.get("count") || touchDefaultCount, 10);
   if (!Number.isFinite(count) || count < 1) count = Number(touchDefaultCount);
-  let mode = params.get("mode") === "gpu" ? "gpu" : "cpu";
+  let mode = params.get("mode") === "cpu" ? "cpu" : "gpu";
 
   let cullEnabled = params.get("cull") === "1";
 
@@ -756,7 +756,7 @@ async function start() {
       setPanel(panel.hidden);
     }
   });
-  setPanel(false);
+  setPanel(!startChromeHidden);
 
   for (const b of document.querySelectorAll("[data-count]")) {
     b.addEventListener("click", async () => {
@@ -804,6 +804,8 @@ async function start() {
         fps = (frames * 1000) / (now - fpsLast);
         frames = 0;
         fpsLast = now;
+        const fpsEl = el("fps");
+        if (fpsEl) fpsEl.textContent = "FPS " + Math.round(fps);
       }
 
       if (renderer.deviceLost) {
@@ -850,20 +852,25 @@ async function start() {
       requestAnimationFrame(loop);
     }
   };
+  const loader = document.getElementById("artisan-loader");
+  if (loader) {
+    loader.classList.add("loaded");
+    setTimeout(() => loader.remove(), 450);
+  }
   requestAnimationFrame(loop);
 }
 
 start().catch((e) => {
-  const loading = document.getElementById("loading");
+  const loader = document.getElementById("artisan-loader");
   const insecureWebGPU = !window.isSecureContext && !navigator.gpu;
-  loading.style.display = "flex";
-  loading.style.padding = "2rem";
-  loading.style.textAlign = "center";
-  loading.style.lineHeight = "1.5";
-  loading.style.pointerEvents = "none";
-  loading.innerText = insecureWebGPU
-    ? "WebGPU is blocked because this LAN page uses HTTP. Open it through HTTPS, or mark this development origin as secure in Chrome flags."
-    : `Failed to start: ${e.message}`;
+  if (loader) {
+    const sub = loader.querySelector(".artisan-loader-sub");
+    if (sub) {
+      sub.textContent = insecureWebGPU
+        ? "WebGPU blocked: requires HTTPS or secure origin."
+        : `Failed to start: ${e.message}`;
+    }
+  }
 
   const panel = document.getElementById("ui");
   const toggle = document.getElementById("toggle");

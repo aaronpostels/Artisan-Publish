@@ -907,7 +907,19 @@ async function start() {
 
     requestAnimationFrame(loop);
   };
+  const loader = document.getElementById("artisan-loader");
+  if (loader) {
+    loader.classList.add("loaded");
+    setTimeout(() => loader.remove(), 450);
+  }
   requestAnimationFrame(loop);
 }
 
-start();
+start().catch((err) => {
+  console.error(err);
+  const loader = document.getElementById("artisan-loader");
+  if (loader) {
+    const sub = loader.querySelector(".artisan-loader-sub");
+    if (sub) sub.textContent = `Error: ${err.message || err}`;
+  }
+});

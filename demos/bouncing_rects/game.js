@@ -171,7 +171,10 @@ async function start() {
 
   const params = new URLSearchParams(location.search);
 
-  let count = parseInt(params.get("count") || "10000", 10);
+  const isTouch = matchMedia("(pointer: coarse)").matches;
+  const defaultCount = isTouch ? "25000" : "250000";
+  let count = parseInt(params.get("count") || defaultCount, 10);
+  if (!Number.isFinite(count) || count < 1) count = Number(defaultCount);
 
   const uiParam = (params.get("ui") || "").toLowerCase();
   const startChromeHidden = ["0", "off", "false", "hide", "hidden", "none"].includes(
@@ -268,7 +271,7 @@ async function start() {
       setPanel(panel.hidden);
     }
   });
-  setPanel(false);
+  setPanel(!startChromeHidden);
 
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
@@ -304,6 +307,8 @@ async function start() {
       fps = (frames * 1000) / (now - fpsLast);
       frames = 0;
       fpsLast = now;
+      const fpsEl = el("fps");
+      if (fpsEl) fpsEl.textContent = "FPS " + Math.round(fps);
     }
 
     const aspect = canvas.width / Math.max(canvas.height, 1);
@@ -326,10 +331,19 @@ async function start() {
 
     requestAnimationFrame(loop);
   };
+  const loader = document.getElementById("artisan-loader");
+  if (loader) {
+    loader.classList.add("loaded");
+    setTimeout(() => loader.remove(), 450);
+  }
   requestAnimationFrame(loop);
 }
 
 start().catch((e) => {
-  document.getElementById("loading").innerText = `Failed to start: ${e.message}`;
+  const loader = document.getElementById("artisan-loader");
+  if (loader) {
+    const sub = loader.querySelector(".artisan-loader-sub");
+    if (sub) sub.textContent = `Failed to start: ${e.message}`;
+  }
   console.error(e);
 });
